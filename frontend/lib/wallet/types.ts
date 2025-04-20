@@ -64,12 +64,32 @@ export interface TransferFromError {
   GenericError?: { message: string; error_code: number };
 }
 
+export interface Icrc1TransferArgs {
+  to: Account;
+  fee?: bigint[];
+  memo?: Uint8Array[];
+  from_subaccount?: Uint8Array[];
+  created_at_time?: bigint[];
+  amount: bigint;
+}
+
+export interface Icrc1TransferError {
+  BadFee?: { expected_fee: bigint };
+  InsufficientFunds?: { balance: bigint };
+  GenericError?: { message: string; error_code: number };
+  TemporarilyUnavailable?: null;
+  Duplicate?: { duplicate_of: bigint };
+  TooOld?: null;
+  CreatedInFuture?: { ledger_time: bigint };
+}
+
 export interface IcrcLedgerActor {
   icrc1_balance_of: (account: Account) => Promise<bigint>;
   icrc1_decimals: () => Promise<number>;
   icrc1_name: () => Promise<string>;
   icrc1_symbol: () => Promise<string>;
   icrc1_total_supply: () => Promise<bigint>;
+  icrc1_transfer: (args: Icrc1TransferArgs) => Promise<{ Ok: bigint } | { Err: Icrc1TransferError }>;
   icrc2_approve: (args: Icrc2ApproveArgs) => Promise<Icrc2ApproveResult>;
   icrc2_allowance: (args: { account: Account; spender: Account }) => Promise<{ allowance: bigint; expires_at: bigint[] }>;
   icrc2_transfer_from: (args: TransferFromArgs) => Promise<{ Ok: bigint } | { Err: TransferFromError }>;

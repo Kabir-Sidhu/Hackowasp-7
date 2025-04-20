@@ -64,7 +64,16 @@ export function PaymentProcessor({
     setIsProcessing(true);
     try {
       let txId: bigint;
-      const recipientPrincipalObj = Principal.fromText(recipientPrincipal);
+      let recipientPrincipalObj: Principal;
+      
+      // Validate the recipient principal ID format
+      try {
+        recipientPrincipalObj = Principal.fromText(recipientPrincipal);
+      } catch (error) {
+        throw new Error(
+          `Invalid recipient principal ID format: ${error instanceof Error ? error.message : 'Unknown format error'}`
+        );
+      }
 
       if (walletType === "plug") {
         // Use Plug's built-in transfer method

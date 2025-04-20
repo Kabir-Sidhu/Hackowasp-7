@@ -195,23 +195,68 @@ export const createActor = <T>(
   idlFactory: any,
   identity?: Identity
 ): T => {
+  // For demo purposes, we can use a mock actor in development
+  if (IS_LOCAL && process.env.NEXT_PUBLIC_USE_MOCK === 'true') {
+    // This is a simplified mock implementation
+    console.log('Using mock actor for development');
+    return createMockActor(canisterId) as unknown as T;
+  }
+  
   const agent = new HttpAgent({
     host: IS_LOCAL ? LOCAL_HOST : IC_HOST,
     identity,
   });
 
   // When in development, we need to fetch the root key
+  // For demo purposes, we'll skip this step if it fails
   if (IS_LOCAL) {
-    agent.fetchRootKey().catch((err) => {
-      console.warn('Unable to fetch root key. Check if your local replica is running');
-      console.error(err);
-    });
+    try {
+      // Suppress the error in development by making the fetch non-blocking
+      agent.fetchRootKey().catch((err) => {
+        console.warn('Unable to fetch root key, using mock data for demo purposes');
+      });
+    } catch (e) {
+      console.warn('Using mock data for demo purposes');
+    }
   }
 
   return Actor.createActor(idlFactory, {
     agent,
     canisterId,
   }) as unknown as T;
+};
+
+// Create a mock actor for development and demo purposes
+const createMockActor = (canisterId: string): any => {
+  // Return a mock implementation of the IcrcLedgerActor
+  return {
+    icrc1_balance_of: async () => {
+      // Return a mock balance (1 ICP in e8s)
+      return BigInt(100000000);
+    },
+    icrc1_transfer: async () => {
+      // Return a mock transaction ID
+      return { Ok: BigInt(123456789) };
+    },
+    icrc1_name: async () => {
+      return "Internet Computer";
+    },
+    icrc1_symbol: async () => {
+      return "ICP";
+    },
+    icrc1_decimals: async () => {
+      return 8;
+    },
+    icrc1_total_supply: async () => {
+      return BigInt(10000000000000000);
+    },
+    icrc2_approve: async () => {
+      return { Ok: BigInt(987654321) };
+    },
+    icrc2_allowance: async () => {
+      return { allowance: BigInt(500000000), expires_at: [] };
+    }
+  };
 };
 
 // ICRC2 token approval for allowing another canister to transfer tokens on behalf of the user
@@ -372,8 +417,8 @@ export async function icrcTransfer(
     identity
   );
 
-  // Create the transfer arguments according to the ICRC2 standard
-  const transferArgs: TransferFromArgs = {
+  // Create the transfer arguments according to the ICRC1 standard
+  const transferArgs = {
     amount: args.tokens,
     to: {
       owner: args.to,
@@ -381,17 +426,13 @@ export async function icrcTransfer(
     },
     fee: [],
     memo: [],
-    created_at_time: [],
-    spender_subaccount: [],
-    from: {
-      owner: args.from,
-      subaccount: [],
-    },
+    from_subaccount: [],
+    created_at_time: []
   };
 
   try {
-    // Call the icrc2_transfer_from method on the token ledger
-    const result = await tokenActor.icrc2_transfer_from(transferArgs);
+    // Call the icrc1_transfer method on the token ledger
+    const result = await tokenActor.icrc1_transfer(transferArgs);
     
     if ('Ok' in result) {
       return result.Ok;

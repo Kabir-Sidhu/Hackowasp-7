@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WalletConnect } from "@/components/wallet/wallet-connect";
 import { Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { Principal } from "@dfinity/principal";
 
 export default function PaymentExamplePage() {
   const { isConnected, principal } = useWalletStore();
@@ -29,10 +30,20 @@ export default function PaymentExamplePage() {
   const handleSubmitPayment = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!recipientPrincipal.trim()) {
+    // Validate Principal ID format
+    try {
+      if (!recipientPrincipal.trim()) {
+        throw new Error("Please enter a recipient principal ID");
+      }
+      
+      // Test if the principal ID is valid by creating a Principal object
+      Principal.fromText(recipientPrincipal);
+    } catch (error) {
       toast({
         title: "Invalid recipient",
-        description: "Please enter a valid recipient principal ID",
+        description: error instanceof Error 
+          ? error.message 
+          : "Please enter a valid recipient principal ID",
         variant: "destructive",
       });
       return;
@@ -135,12 +146,15 @@ export default function PaymentExamplePage() {
                     <Label htmlFor="recipientPrincipal">Recipient Principal ID</Label>
                     <Input
                       id="recipientPrincipal"
-                      placeholder="aaaaa-aa"
+                      placeholder="ryjl3-tyaaa-aaaaa-aaaba-cai"
                       value={recipientPrincipal}
                       onChange={(e) => setRecipientPrincipal(e.target.value)}
                       className="bg-zinc-800 border-zinc-700"
                       required
                     />
+                    <p className="text-xs text-zinc-500 mt-1">
+                      Enter a valid principal ID (e.g., ryjl3-tyaaa-aaaaa-aaaba-cai)
+                    </p>
                   </div>
                   
                   <div className="space-y-2">

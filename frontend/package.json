@@ -16,6 +16,7 @@
     "@dfinity/principal": "^0.21.0",
     "@nfid/embed": "^0.2.0",
     "class-variance-authority": "^0.7.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.501.0",
     "next": "15.3.1",
