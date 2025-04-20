@@ -61,11 +61,48 @@ export function WalletConnect() {
     setIsLoading("nfid");
     setError(null);
     try {
-      const { principal, identity } = await connectToNFID();
-      const accountId = principalToAccountIdentifier(principal);
-      actions.setWallet(principal, "nfid", accountId);
-      setShowDialog(false);
+      // Check if running in a secure context (required for crypto operations)
+      if (typeof window !== 'undefined' && 
+          (!window.isSecureContext || !window.crypto || !window.crypto.subtle)) {
+        throw new Error(
+          'Your browser environment does not support the required cryptographic features. ' +
+          'Please use a modern browser with SubtleCrypto support.'
+        );
+      }
+      
+      // Try connecting with enhanced error handling
+      try {
+        const { principal, identity } = await connectToNFID();
+        const accountId = principalToAccountIdentifier(principal);
+        actions.setWallet(principal, "nfid", accountId);
+        setShowDialog(false);
+      } catch (nfidError: any) {
+        // Handle specific NFID errors
+        if (nfidError.message?.includes('SubtleCrypto')) {
+          throw new Error(
+            'Cryptography support is not available. This may be due to running in an insecure context. ' +
+            'Try using a different browser or accessing the site via HTTPS.'
+          );
+        }
+        throw nfidError; // Re-throw other errors
+      }
     } catch (err: any) {
+      // For demo purposes in development, generate mock data instead
+      if (process.env.NEXT_PUBLIC_USE_MOCK === 'true') {
+        try {
+          console.warn('Using mock NFID login for development');
+          // Generate a mock principal and account ID
+          const mockPrincipal = await import('@dfinity/principal')
+            .then(module => module.Principal.fromText("2vxsx-fae"));
+          const mockAccountId = principalToAccountIdentifier(mockPrincipal);
+          actions.setWallet(mockPrincipal, "nfid", mockAccountId);
+          setShowDialog(false);
+          return;
+        } catch (mockError) {
+          console.error('Failed to create mock wallet data:', mockError);
+        }
+      }
+      
       setError(err.message || "Failed to connect to NFID");
       console.error(err);
     } finally {

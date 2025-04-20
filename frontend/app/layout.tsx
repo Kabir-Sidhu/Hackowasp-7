@@ -2,6 +2,7 @@ import type React from "react"
 import "./globals.css"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import { CryptoProvider } from "@/components/crypto-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          {children}
+          <CryptoProvider>
+            {children}
+          </CryptoProvider>
         </ThemeProvider>
       </body>
     </html>
