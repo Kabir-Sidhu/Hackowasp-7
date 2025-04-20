@@ -3,9 +3,10 @@ import {
   icrcGetBalance, 
   icrcTransfer, 
   transferTokensFromPlug, 
-  createActor
+  createActor,
+  icrcLedgerAbi
 } from "@/lib/wallet/wallet-utils";
-import { IcrcLedgerActor, icrcLedgerAbi } from "@/lib/wallet/types";
+import { IcrcLedgerActor } from "@/lib/wallet/types";
 import { Identity } from "@dfinity/agent";
 
 // Default ICP Ledger canister ID - replace with actual value if needed
