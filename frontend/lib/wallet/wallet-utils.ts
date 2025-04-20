@@ -179,7 +179,8 @@ export const connectToPlugWallet = async (whitelist: string[] = [], host?: strin
   if (typeof window.ic.plug.getAccountId === 'function') {
     accountId = await window.ic.plug.getAccountId();
   } else if (window.ic.plug.accountId) {
-    accountId = await window.ic.plug.accountId();
+    // Access as a property, not a function
+    accountId = window.ic.plug.accountId;
   } else {
     // Fallback: derive account ID from principal
     accountId = principalToAccountIdentifier(principal);
@@ -280,8 +281,11 @@ export const approveTokensFromPlug = async (
     throw new Error('Plug wallet is not installed');
   }
   
+  // Use type casting to bypass TypeScript issues with Plug's API
+  const plugAny = window.ic.plug as any;
+  
   // Type check for requestCall method
-  if (typeof window.ic.plug.requestCall !== 'function') {
+  if (typeof plugAny.requestCall !== 'function') {
     throw new Error('Plug wallet version does not support requestCall method');
   }
   
@@ -314,8 +318,16 @@ export const approveTokensFromPlug = async (
   };
   
   try {
+    // Use type casting to bypass TypeScript issues with Plug's API
+    const plugAny = window.ic.plug as any;
+    
+    // Type check for requestCall method
+    if (typeof plugAny.requestCall !== 'function') {
+      throw new Error('Plug wallet version does not support requestCall method');
+    }
+    
     // Call the icrc2_approve method through Plug wallet with type assertion
-    const requestCallFn = window.ic.plug.requestCall as (
+    const requestCallFn = plugAny.requestCall as (
       params: {
         canisterId: string;
         methodName: string;
@@ -443,8 +455,16 @@ export async function transferTokensFromPlug(
   });
   
   try {
+    // Use type casting to bypass TypeScript issues with Plug's API
+    const plugAny = window.ic.plug as any;
+    
+    // Check if requestTransfer method exists
+    if (typeof plugAny.requestTransfer !== 'function') {
+      throw new Error('requestTransfer method is not available in this version of Plug wallet');
+    }
+    
     // Call the requestTransfer method through Plug wallet
-    const result = await window.ic.plug.requestTransfer({
+    const result = await plugAny.requestTransfer({
       to: toAccountId,
       amount: Number(amount),
       opts: {
