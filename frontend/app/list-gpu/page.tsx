@@ -297,8 +297,9 @@ export default function ListGpuPage() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     type="submit"
-                    className="w-full h-11 px-8 text-base"
-                    disabled={isSubmitting}
+                    size="lg"
+                    className="bg-purple-600 hover:bg-purple-700"
+                    disabled={!gpuType || !vramAmount}
                   >
                     List Your GPU
                   </Button>

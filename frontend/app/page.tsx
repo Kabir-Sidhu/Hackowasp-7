@@ -30,8 +30,16 @@ export default function Home() {
           </nav>
           <div className="flex items-center gap-4">
             {/* Wallet Connect Component */}
-            <WalletConnect />
+            {/* <WalletConnect /> */}
             
+            <MotionButton
+              className="bg-purple-600 hover:bg-purple-700 ml-2"
+              whileHover={{ scale: 1.05, backgroundColor: "#7e22ce" }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link href="/payment-example">Connect Wallet</Link>
+            </MotionButton>
+
             <MotionButton
               className="bg-purple-600 hover:bg-purple-700 ml-2"
               whileHover={{ scale: 1.05, backgroundColor: "#7e22ce" }}

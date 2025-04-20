@@ -158,7 +158,7 @@ export function WalletConnect() {
       {isConnected ? (
         <div className="flex items-center gap-2">
           <span className="hidden md:block text-sm text-zinc-400">
-            {walletType === "internetIdentity" && "Internet Identity"}
+            {/* {walletType === "internetIdentity" && "Internet Identity"} */}
             {walletType === "nfid" && "NFID"}
             {walletType === "plug" && "Plug"}
             : {principal?.toString().slice(0, 5)}...{principal?.toString().slice(-3)}
@@ -198,24 +198,24 @@ export function WalletConnect() {
             )}
             
             <div className="grid gap-3">
-              <MotionButton
+              {/* <MotionButton
                 disabled={isLoading !== null}
                 onClick={handleInternetIdentityLogin}
                 variant="outline"
                 className="border-zinc-700 hover:bg-zinc-800 flex items-center justify-center h-12"
                 whileHover={{ scale: 1.02, borderColor: "#9333ea" }}
               >
-                {isLoading === "internetIdentity" ? (
+                {/* {isLoading === "internetIdentity" ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <>
-                    <img src="https://internetcomputer.org/img/IC_logo_horizontal.svg" 
-                         alt="Internet Identity" 
-                         className="h-5 mr-2" />
-                    Internet Identity
-                  </>
-                )}
-              </MotionButton>
+                  // <>
+                  //   <img src="https://internetcomputer.org/img/IC_logo_horizontal.svg" 
+                  //        alt="Internet Identity" 
+                  //        className="h-5 mr-2" />
+                  //   Internet Identity
+                  // </>
+                )} 
+              </MotionButton> */}
               
               <MotionButton
                 disabled={isLoading !== null}
@@ -228,7 +228,7 @@ export function WalletConnect() {
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
                   <>
-                    <img src="https://nfid.one/images/logo.svg" 
+                    <img src="https://user-images.githubusercontent.com/33829677/162224559-f38581ec-fbd7-4ab0-a99a-5bf5332811b3.png" 
                          alt="NFID" 
                          className="h-5 mr-2" />
                     NFID
@@ -249,7 +249,7 @@ export function WalletConnect() {
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
                   <>
-                    <img src="https://docs.plugwallet.ooo/imgs/plug-logo.svg" 
+                    <img src="https://play-lh.googleusercontent.com/C1Aw_QnECyezACj9zmSz0vxrszP5LoiPA9K1zwiGn8PxsxyQSMmCLA7IZwFBQEbwF5dQ=w480-h960" 
                          alt="Plug Wallet" 
                          className="h-5 mr-2" />
                     {isPlugInstalled ? "Plug Wallet" : "Plug Not Installed"}

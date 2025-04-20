@@ -1,52 +1,39 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,
-    "esModuleInterop": true,
+    "incremental": true,
     "module": "esnext",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": false,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "ignoreDeprecations": "5.0",
-    "suppressImplicitAnyIndexErrors": false,
-    "checkJs": false,
     "plugins": [
       {
         "name": "next"
       }
     ],
+    "baseUrl": ".",                      // <- Add this
     "paths": {
-      "@/*": ["./*"]
-    },
-    "typeRoots": [
-      "./node_modules/@types", 
-      "./types.d.ts", 
-      "./nfid.d.ts",
-      "./ui-shims.d.ts",
-      "./dfinity.d.ts"
-    ]
+      "@/*": ["./*"]                    // <- Add this
+    }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
     ".next/types/**/*.ts",
-    "types.d.ts",
-    "nfid.d.ts",
-    "ui-shims.d.ts",
-    "dfinity.d.ts"
+    "**/*.ts",
+    "**/*.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ],
 }
